@@ -6,7 +6,8 @@
   "dependencies": {
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
-    "socket.io": "^2.0.2"
+    "socket.io": "^2.0.2",
+    "styled-components": "^2.0.1"
   },
   "devDependencies": {
     "express": "^4.15.3",
