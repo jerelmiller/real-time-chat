@@ -1,14 +1,19 @@
 import React from 'react'
 import MessageBubble from './MessageBubble'
 import MessageListItemContainer from './MessageListItemContainer'
-import MessageSentInfo from './MessageSentInfo'
+import MessageInfo from './MessageInfo'
+import moment from 'moment'
 
-const MessageListItem = ({ message }) => (
-  <MessageListItemContainer mine={ message.mine }>
-    <MessageBubble mine={ message.mine }>
-      { message.message }
+const DATE_FORMAT = 'MMM Do, h:mma'
+
+const MessageListItem = ({ message: { mine, message, name, timestamp }}) => (
+  <MessageListItemContainer mine={ mine }>
+    <MessageBubble mine={ mine }>
+      { message }
     </MessageBubble>
-    <MessageSentInfo date={ message.timestamp } name={ message.name } />
+    <MessageInfo>
+      { `${moment(timestamp).format(DATE_FORMAT)} from ${name}` }
+    </MessageInfo>
   </MessageListItemContainer>
 )
 
