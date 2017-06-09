@@ -79,7 +79,7 @@ class App extends Component {
   }
 
   sendMessage() {
-    const { id } = this.props
+    const { id, socket } = this.props
     const { message } = this.state
     const timestamp = moment.utc().toISOString()
 
@@ -87,7 +87,7 @@ class App extends Component {
       return
     }
 
-    this.props.socket.emit('message', {
+    socket.emit('message', {
       id,
       message,
       timestamp,
