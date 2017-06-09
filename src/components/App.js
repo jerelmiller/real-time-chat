@@ -6,6 +6,8 @@ import moment from 'moment'
 
 class App extends Component {
   state = {
+    typing: false,
+    usersTyping: [],
     messages: [],
     message: ''
   }
@@ -14,6 +16,43 @@ class App extends Component {
     super(props)
 
     props.socket.on('message', this.handleIncomingMessage)
+    props.socket.on('userDidStartTyping', this.handleStartTyping)
+    props.socket.on('userDidStopTyping', this.handleStopTyping)
+  }
+
+  componentDidUpdate(_, prevState) {
+    const { id, socket } = this.props
+    const { typing } = this.state
+    const user = { id, name: 'Jerel' }
+
+    if (typing && !prevState.typing) {
+      socket.emit('userDidStartTyping', user)
+    } else if (prevState.typing && !typing) {
+      socket.emit('userDidStopTyping', user)
+    }
+  }
+
+  handleStartTyping = user => {
+    if (user.id === this.props.id) {
+      return
+    }
+
+    this.setState(state => ({
+      usersTyping: [
+        ...state.usersTyping,
+        user
+      ]
+    }))
+  }
+
+  handleStopTyping = user => {
+    if (user.id === this.props.id) {
+      return
+    }
+
+    this.setState(state => ({
+      usersTyping: state.usersTyping.filter(u => u.id !== user.id)
+    }))
   }
 
   handleIncomingMessage = message => {
@@ -26,7 +65,12 @@ class App extends Component {
   }
 
   handleChange = e => {
-    this.setState({ message: e.target.value })
+    const { value } = e.target
+
+    this.setState({
+      message: value,
+      typing: Boolean(value)
+    })
   }
 
   handleSubmit = () => {
@@ -46,16 +90,20 @@ class App extends Component {
     this.props.socket.emit('message', {
       id,
       message,
-      timestamp
+      timestamp,
+      name: 'Jerel'
     })
   }
 
   render() {
-    const { message, messages } = this.state
+    const { message, messages, usersTyping } = this.state
 
     return (
       <ChatContainer>
-        <MessageList messages={ messages } />
+        <MessageList
+          messages={ messages }
+          usersTyping={ usersTyping }
+        />
         <MessageInput
           value={ message }
           onChange={ this.handleChange }
