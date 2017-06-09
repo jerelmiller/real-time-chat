@@ -1,3 +1,4 @@
+/* eslint-disable no-mixed-operators */
 const guid = () =>
   'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
     const r = Math.random() * 16|0
