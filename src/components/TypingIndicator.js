@@ -13,7 +13,10 @@ const TypingIndicator = ({ username }) => (
     <MessageBubble>
       <TypingCircles />
     </MessageBubble>
-    <MessageInfo>{ username } is typing...</MessageInfo>
+    <MessageInfo>
+      <strong>{ username } </strong>
+      is typing...
+    </MessageInfo>
   </MessageListItemContainer>
 )
 
