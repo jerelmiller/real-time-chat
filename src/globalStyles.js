@@ -16,4 +16,8 @@ injectGlobal`
     background: #F7FAFB;
     font-family: Roboto, sans-serif;
   }
+
+  html, body, #root {
+    height: 100%;
+  }
 `
