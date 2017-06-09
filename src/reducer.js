@@ -5,7 +5,6 @@ const USER_STARTED_TYPING = 'USER_STARTED_TYPING'
 const USER_STOPPED_TYPING = 'USER_STOPPED_TYPING'
 
 const initialState = {
-  typing: false,
   usersTyping: [],
   messages: [],
   value: ''
@@ -36,42 +35,61 @@ export const userStoppedTyping = user => ({
   user
 })
 
+const usersTyping = (state = [], action) => {
+  switch (action.type) {
+    case USER_STARTED_TYPING:
+      return [
+        ...state,
+        action.user
+      ]
+    case USER_STOPPED_TYPING:
+      return state.filter(user => user.id !== action.user.id)
+    default:
+      return state
+  }
+}
+
+const messages = (state = [], action) => {
+  switch (action.type) {
+    case INCOMING_MESSAGE:
+      return [
+        ...state,
+        { ...action.message, mine: action.mine }
+      ]
+    default:
+      return state
+  }
+}
+
+const value = (state = '', action) => {
+  switch (action.type) {
+    case CHANGE_VALUE:
+      return action.value
+    case RESET_VALUE:
+      return ''
+    default:
+      return state
+  }
+}
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case CHANGE_VALUE:
-      return {
-        ...state,
-        value: action.value,
-        typing: Boolean(action.value)
-      }
     case RESET_VALUE:
       return {
         ...state,
-        value: '',
-        typing: false
+        value: value(state.value, action)
       }
     case INCOMING_MESSAGE:
       return {
         ...state,
-        messages: [
-          ...state.messages,
-          { ...action.message, mine: action.mine }
-        ]
+        messages: messages(state.messages, action)
       }
     case USER_STARTED_TYPING:
-      return {
-        ...state,
-        usersTyping: [
-          ...state.usersTyping,
-          action.user
-        ]
-      }
     case USER_STOPPED_TYPING:
       return {
         ...state,
-        usersTyping: state.usersTyping.filter(user =>
-          user.id !== action.user.id
-        )
+        usersTyping: usersTyping(state.usersTyping, action)
       }
     default:
       return state
