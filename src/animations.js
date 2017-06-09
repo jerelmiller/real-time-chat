@@ -24,3 +24,13 @@ export const slideInFromRight = keyframes`
     opacity: 1;
   }
 `
+
+export const scaleIn = keyframes`
+  from { transform: scale(0.4); }
+  to { transform: scale(1); }
+`
+
+export const scaleOut = keyframes`
+  from { opacity: scale(1); }
+  to { transform: scale(0.4); }
+`
