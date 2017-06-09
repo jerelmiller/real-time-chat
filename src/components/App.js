@@ -39,6 +39,10 @@ class App extends Component {
     const { message } = this.state
     const timestamp = moment.utc().toISOString()
 
+    if (!message) {
+      return
+    }
+
     this.props.socket.emit('message', {
       id,
       message,
