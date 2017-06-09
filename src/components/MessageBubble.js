@@ -13,9 +13,7 @@ const MessageBubble = styled.div`
   border-radius: 7px;
   clear: both;
   margin-bottom: 1rem;
-  max-width: 60%;
   background: ${colors.other};
-  float: left;
   position: relative;
 
   &:after {
@@ -34,7 +32,6 @@ const MessageBubble = styled.div`
   ${({ mine }) => mine && css`
     color: white;
     background: ${colors.mine};
-    float: right;
 
     &:after {
       border-left-color: ${colors.mine};
