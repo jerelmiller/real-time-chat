@@ -6,13 +6,12 @@ const colors = {
 }
 
 const MessageBubble = styled.div`
+  display: inline-block;
   padding: 0.5rem 1rem;
   line-height: 1.5;
   font-size: 1rem;
   font-weight: 300;
   border-radius: 7px;
-  clear: both;
-  margin-bottom: 1rem;
   background: ${colors.other};
   position: relative;
 
