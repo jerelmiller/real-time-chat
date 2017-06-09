@@ -1,13 +1,15 @@
 import React from 'react'
-import Input from './Input'
+import MessageSendIcon from './MessageSendIcon'
+import MessageTextInput from './MessageTextInput'
 import MessageInputContainer from './MessageInputContainer'
 
 const ENTER_KEY = 13
 
 const MessageInput = ({ onSubmit, ...props }) => (
   <MessageInputContainer>
-    <Input
+    <MessageTextInput
       { ...props }
+      placeholder='Write your message...'
       type='text'
       onKeyDown={ e => {
         if (e.which === ENTER_KEY) {
@@ -15,6 +17,7 @@ const MessageInput = ({ onSubmit, ...props }) => (
         }
       }}
     />
+    <MessageSendIcon onClick={ onSubmit } />
   </MessageInputContainer>
 )
 
