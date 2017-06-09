@@ -6,7 +6,7 @@ const colors = {
 }
 
 const MessageBubble = styled.div`
-  padding: 0.75rem;
+  padding: 0.5rem 1rem;
   line-height: 1.5;
   font-size: 1rem;
   font-weight: 300;
