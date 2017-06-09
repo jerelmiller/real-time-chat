@@ -1,11 +1,13 @@
-import PropTypes from 'prop-types'
 import React from 'react'
 import MessageBubble from './MessageBubble'
+import MessageListItemContainer from './MessageListItemContainer'
 
 const MessageListItem = ({ message }) => (
-  <MessageBubble mine={ message.mine }>
-    { message.message }
-  </MessageBubble>
+  <MessageListItemContainer mine={ message.mine }>
+    <MessageBubble mine={ message.mine }>
+      { message.message }
+    </MessageBubble>
+  </MessageListItemContainer>
 )
 
 export default MessageListItem
