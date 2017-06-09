@@ -34,9 +34,10 @@ class App extends Component {
         this.setState(state =>
           reducer(state, incomingMessage({
             userId: user.id,
-            type: 'INFO',
+            type: 'EVENT',
             username: user.username,
-            timestamp: user.timestamp
+            timestamp: user.timestamp,
+            event: 'entered the chat'
           }, false))
         )
       }
@@ -53,6 +54,27 @@ class App extends Component {
         this.setState(state => reducer(state, userStoppedTyping(user)))
       }
     })
+
+    this.socket.on('userDisconnected', user => {
+      this.setState(state =>
+        reducer(state, incomingMessage({
+          userId: user.id,
+          type: 'EVENT',
+          username: user.username,
+          timestamp: user.timestamp,
+          event: 'left the chat'
+        }, false))
+      )
+    })
+  }
+
+  componentDidMount() {
+    window.onbeforeunload = () => {
+      this.socket.emit('userDisconnected', {
+        id: this.id,
+        username: this.state.username
+      })
+    }
   }
 
   componentDidUpdate(_, prevState) {

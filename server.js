@@ -23,6 +23,10 @@ io.on('connection', socket => {
   socket.on('userEntered', user => {
     io.emit('userEntered', user)
   })
+
+  socket.on('userDisconnected', user => {
+    io.emit('userDisconnected', user)
+  })
 })
 
 server.listen(port, err => {

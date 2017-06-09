@@ -11,6 +11,7 @@ const DATE_FORMAT = 'MMM Do, h:mma'
 
 const MessageListItem = ({
   message: {
+    event,
     mine,
     message,
     username,
@@ -34,9 +35,9 @@ const MessageListItem = ({
             { `${moment(timestamp).format(DATE_FORMAT)} from ${username}` }i
           </span>
         </When>
-        <When match='INFO'>
+        <When match='EVENT'>
           <em>
-            { `${moment(timestamp).format(DATE_FORMAT)} ${username} entered the chat` }
+            { `${moment(timestamp).format(DATE_FORMAT)} ${username} ${event}` }
           </em>
         </When>
       </Switch>
