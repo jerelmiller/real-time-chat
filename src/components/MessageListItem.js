@@ -3,7 +3,7 @@ import React from 'react'
 import MessageBubble from './MessageBubble'
 
 const MessageListItem = ({ message }) => (
-  <MessageBubble isMine={ message.isMine }>
+  <MessageBubble mine={ message.mine }>
     { message.message }
   </MessageBubble>
 )

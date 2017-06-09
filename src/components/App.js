@@ -20,7 +20,7 @@ class App extends Component {
     this.setState(state => ({
       messages: [
         ...state.messages,
-        { ...message, isMine: message.id === this.props.id }
+        { ...message, mine: message.id === this.props.id }
       ]
     }))
   }

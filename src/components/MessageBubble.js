@@ -8,10 +8,12 @@ const MessageBubble = styled.div`
   clear: both;
   margin-bottom: 1rem;
   max-width: 60%;
-  background: ${({ isMine }) => isMine ? '#6F5A98' : '#EEE' };
-  float: ${({ isMine }) => isMine ? 'right' : 'left' };
-  ${({ isMine }) => isMine && css`
+  background: #eee;
+  float: left;
+  ${({ mine }) => mine && css`
     color: white;
+    background: #6F5A98;
+    float: right;
   `}
 `
 
