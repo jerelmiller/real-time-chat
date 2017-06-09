@@ -29,6 +29,19 @@ class App extends Component {
       )
     })
 
+    this.socket.on('userEntered', user => {
+      if (user.id !== this.id) {
+        this.setState(state =>
+          reducer(state, incomingMessage({
+            userId: user.id,
+            type: 'INFO',
+            username: user.username,
+            timestamp: user.timestamp
+          }, false))
+        )
+      }
+    })
+
     this.socket.on('userDidStartTyping', user => {
       if (user.id !== this.id) {
         this.setState(state => reducer(state, userStartedTyping(user)))
@@ -50,6 +63,13 @@ class App extends Component {
       this.socket.emit('userDidStartTyping', user)
     } else if (Boolean(prevState.value) && !value) {
       this.socket.emit('userDidStopTyping', user)
+    }
+
+    if (Boolean(username) && !prevState.username) {
+      this.socket.emit('userEntered', {
+        ...user,
+        timestamp: moment.utc().toISOString()
+      })
     }
   }
 
@@ -74,6 +94,7 @@ class App extends Component {
 
     this.socket.emit('message', {
       userId: this.id,
+      type: 'CHAT',
       message: value,
       username,
       timestamp
