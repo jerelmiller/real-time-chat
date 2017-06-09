@@ -1,15 +1,16 @@
+import MessageListContainer from './MessageListContainer'
 import MessageListItem from './MessageListItem'
 import React from 'react'
 
 const MessageList = ({ messages }) => (
-  <div>
+  <MessageListContainer>
     { messages.map(message => (
       <MessageListItem
         key={ message.timestamp }
         message={ message }
       />
     )) }
-  </div>
+  </MessageListContainer>
 )
 
 export default MessageList
