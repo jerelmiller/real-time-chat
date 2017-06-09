@@ -1,4 +1,6 @@
 import ChatContainer from './ChatContainer'
+import io from 'socket.io-client'
+import guid from '../utils/guid'
 import React, { Component } from 'react'
 import MessageInput from './MessageInput'
 import MessageList from './MessageList'
@@ -15,25 +17,26 @@ class App extends Component {
   constructor(props) {
     super(props)
 
-    props.socket.on('message', this.handleIncomingMessage)
-    props.socket.on('userDidStartTyping', this.handleStartTyping)
-    props.socket.on('userDidStopTyping', this.handleStopTyping)
+    this.id = guid()
+    this.socket = io(process.env.REACT_APP_SOCKET_ADDRESS)
+    this.socket.on('message', this.handleIncomingMessage)
+    this.socket.on('userDidStartTyping', this.handleStartTyping)
+    this.socket.on('userDidStopTyping', this.handleStopTyping)
   }
 
   componentDidUpdate(_, prevState) {
-    const { id, socket } = this.props
     const { typing } = this.state
-    const user = { id, name: 'Jerel' }
+    const user = { id: this.id, name: 'Jerel' }
 
     if (typing && !prevState.typing) {
-      socket.emit('userDidStartTyping', user)
+      this.socket.emit('userDidStartTyping', user)
     } else if (prevState.typing && !typing) {
-      socket.emit('userDidStopTyping', user)
+      this.socket.emit('userDidStopTyping', user)
     }
   }
 
   handleStartTyping = user => {
-    if (user.id === this.props.id) {
+    if (user.id === this.id) {
       return
     }
 
@@ -46,7 +49,7 @@ class App extends Component {
   }
 
   handleStopTyping = user => {
-    if (user.id === this.props.id) {
+    if (user.id === this.id) {
       return
     }
 
@@ -59,7 +62,7 @@ class App extends Component {
     this.setState(state => ({
       messages: [
         ...state.messages,
-        { ...message, mine: message.id === this.props.id }
+        { ...message, mine: message.id === this.id }
       ]
     }))
   }
@@ -79,7 +82,6 @@ class App extends Component {
   }
 
   sendMessage() {
-    const { id, socket } = this.props
     const { message } = this.state
     const timestamp = moment.utc().toISOString()
 
@@ -87,8 +89,8 @@ class App extends Component {
       return
     }
 
-    socket.emit('message', {
-      id,
+    this.socket.emit('message', {
+      id: this.id,
       message,
       timestamp,
       name: 'Jerel'
