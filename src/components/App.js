@@ -61,7 +61,9 @@ class App extends Component {
 
     if (Boolean(value) && !prevState.value) {
       this.socket.emit('userDidStartTyping', user)
-    } else if (Boolean(prevState.value) && !value) {
+    }
+
+    if (Boolean(prevState.value) && !value) {
       this.socket.emit('userDidStopTyping', user)
     }
 
