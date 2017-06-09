@@ -5,7 +5,7 @@ import registerServiceWorker from './registerServiceWorker'
 import io from 'socket.io-client'
 import './globalStyles'
 
-const socket = io()
+const socket = io('http://localhost:4000')
 
 ReactDOM.render(
   <App socket={ socket } />,
