@@ -3,14 +3,14 @@ import MessageBubble from './MessageBubble'
 import MessageListItemContainer from './MessageListItemContainer'
 import MessageInfo from './MessageInfo'
 import moment from 'moment'
-import { slideFromLeft, slideFromRight } from '../animations'
+import { slideInFromLeft, slideInFromRight } from '../animations'
 
 const DATE_FORMAT = 'MMM Do, h:mma'
 
 const MessageListItem = ({ message: { mine, message, name, timestamp }}) => (
   <MessageListItemContainer
     align={ mine ? 'right' : 'left' }
-    enterAnimation={ mine ? slideFromRight : slideFromLeft }
+    enterAnimation={ mine ? slideInFromRight : slideInFromLeft }
   >
     <MessageBubble mine={ mine }>
       { message }
