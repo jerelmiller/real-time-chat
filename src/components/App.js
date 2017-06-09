@@ -75,7 +75,7 @@ class App extends Component {
 
   handleSubmit = () => {
     this.sendMessage()
-    this.setState({ message: '' })
+    this.setState({ message: '', typing: false })
   }
 
   sendMessage() {
