@@ -20,9 +20,24 @@ class App extends Component {
     this.state = reducer(undefined, {})
     this.id = guid()
     this.socket = io(process.env.REACT_APP_SOCKET_ADDRESS)
-    this.socket.on('message', this.handleIncomingMessage)
-    this.socket.on('userDidStartTyping', this.handleStartTyping)
-    this.socket.on('userDidStopTyping', this.handleStopTyping)
+
+    this.socket.on('message', message => {
+      this.setState(state =>
+        reducer(state, incomingMessage(message, message.id === this.id))
+      )
+    })
+
+    this.socket.on('userDidStartTyping', user => {
+      if (user.id !== this.id) {
+        this.setState(state => reducer(state, userStartedTyping(user)))
+      }
+    })
+
+    this.socket.on('userDidStopTyping', user => {
+      if (user.id !== this.id) {
+        this.setState(state => reducer(state, userStoppedTyping(user)))
+      }
+    })
   }
 
   componentDidUpdate(_, prevState) {
@@ -34,28 +49,6 @@ class App extends Component {
     } else if (Boolean(prevState.value) && !value) {
       this.socket.emit('userDidStopTyping', user)
     }
-  }
-
-  handleStartTyping = user => {
-    if (user.id === this.id) {
-      return
-    }
-
-    this.setState(state => reducer(state, userStartedTyping(user)))
-  }
-
-  handleStopTyping = user => {
-    if (user.id === this.id) {
-      return
-    }
-
-    this.setState(state => reducer(state, userStoppedTyping(user)))
-  }
-
-  handleIncomingMessage = message => {
-    this.setState(state =>
-      reducer(state, incomingMessage(message, message.id === this.id))
-    )
   }
 
   handleChange = e => {
