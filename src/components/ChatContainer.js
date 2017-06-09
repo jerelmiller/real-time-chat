@@ -4,7 +4,6 @@ const ChatContainer = styled.div`
   width: 50%;
   margin: 0 auto;
   height: 90%;
-  border: 1px solid #ddd;
   border-radius: 5px;
   position: relative;
   top: 50%;
