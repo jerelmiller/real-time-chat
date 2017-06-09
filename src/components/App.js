@@ -5,7 +5,13 @@ import React, { Component } from 'react'
 import MessageInput from './MessageInput'
 import MessageList from './MessageList'
 import moment from 'moment'
-import reducer from '../reducer'
+import reducer, {
+  changeValue,
+  incomingMessage,
+  resetValue,
+  userStartedTyping,
+  userStoppedTyping
+} from '../reducer'
 
 class App extends Component {
   constructor(props) {
@@ -35,12 +41,7 @@ class App extends Component {
       return
     }
 
-    this.setState(state =>
-      reducer(state, {
-        type: 'USER_STARTED_TYPING',
-        user: user
-      })
-    )
+    this.setState(state => reducer(state, userStartedTyping(user)))
   }
 
   handleStopTyping = user => {
@@ -48,45 +49,44 @@ class App extends Component {
       return
     }
 
-    this.setState(state =>
-      reducer(state, {
-        type: 'USER_STOPPED_TYPING',
-        user
-      })
-    )
+    this.setState(state => reducer(state, userStoppedTyping(user)))
   }
 
   handleIncomingMessage = message => {
     this.setState(state =>
-      reducer(state, {
-        type: 'ADD_MESSAGE',
-        mine: message.id === this.id,
-        message
-      })
+      reducer(state, incomingMessage(message, message.id === this.id))
     )
   }
 
   handleChange = e => {
     const { value } = e.target
 
-    this.setState(state => (
-      reducer(state, {
-        type: 'CHANGE_MESSAGE',
-        value
-      })
-    ))
+    this.setState(state => reducer(state, changeValue(value)))
   }
 
   handleSubmit = () => {
     this.sendMessage()
-    this.setState(state => reducer(state, { type: 'RESET_MESSAGE' }))
+    this.setState(state => reducer(state, resetValue()))
   }
 
   sendMessage() {
+    const { value } = this.state
+    const timestamp = moment.utc().toISOString()
+
+    if (!value) {
+      return
+    }
+
+    this.socket.emit('message', {
+      id: this.id,
+      message: value,
+      name: 'Jerel',
+      timestamp
+    })
   }
 
   render() {
-    const { message, messages, usersTyping } = this.state
+    const { messages, usersTyping, value } = this.state
 
     return (
       <ChatContainer>
@@ -95,7 +95,7 @@ class App extends Component {
           usersTyping={ usersTyping }
         />
         <MessageInput
-          value={ message }
+          value={ value }
           onChange={ this.handleChange }
           onSubmit={ this.handleSubmit }
         />
