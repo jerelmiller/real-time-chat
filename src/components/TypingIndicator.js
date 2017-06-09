@@ -5,12 +5,12 @@ import MessageListItemContainer from './MessageListItemContainer'
 import TypingCircles from './TypingCircles'
 import styled from 'styled-components'
 
-const TypingIndicator = () => (
+const TypingIndicator = ({ name }) => (
   <MessageListItemContainer>
     <MessageBubble>
       <TypingCircles />
     </MessageBubble>
-    <MessageInfo>Jerel is typing...</MessageInfo>
+    <MessageInfo>{ name } is typing...</MessageInfo>
   </MessageListItemContainer>
 )
 
