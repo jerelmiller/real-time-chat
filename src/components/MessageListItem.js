@@ -32,7 +32,7 @@ const MessageListItem = ({
       <Switch condition={ type }>
         <When match='CHAT'>
           <span>
-            { `${moment(timestamp).format(DATE_FORMAT)} from ${username}` }i
+            { `${moment(timestamp).format(DATE_FORMAT)} from ${username}` }
           </span>
         </When>
         <When match='EVENT'>
