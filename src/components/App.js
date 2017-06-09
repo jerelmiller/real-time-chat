@@ -1,5 +1,4 @@
 import ChatContainer from './ChatContainer'
-import io from 'socket.io-client'
 import guid from '../utils/guid'
 import React, { Component } from 'react'
 import MessageInput from './MessageInput'
@@ -21,7 +20,23 @@ class App extends Component {
 
     this.state = reducer(undefined, {})
     this.id = guid()
-    this.socket = io(process.env.REACT_APP_SOCKET_ADDRESS)
+
+    WebSocket.prototype.emit = function(type, payload) {
+      const msg = Object.assign({}, { payload }, { type })
+      this.send(JSON.stringify(msg))
+    }
+
+    WebSocket.prototype.on = function(type, fn) {
+      this.handlers = this.handlers || {}
+      this.handlers[type] = fn
+    }
+
+    this.socket = new WebSocket(process.env.REACT_APP_SOCKET_ADDRESS)
+    this.socket.onmessage = function(message) {
+      const data = JSON.parse(message.data)
+      const handler = this.handlers[data.type]
+      return handler(data.payload)
+    }
 
     this.socket.on('message', message => {
       this.setState(state =>
