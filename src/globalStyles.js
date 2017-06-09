@@ -13,7 +13,7 @@ injectGlobal`
 
   body {
     margin: 0;
-    background: #F7FAFB;
+    background: #52595F;
     font-family: Roboto, sans-serif;
   }
 
