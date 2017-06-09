@@ -4,14 +4,14 @@ import MessageInputContainer from './MessageInputContainer'
 
 const ENTER_KEY = 13
 
-const MessageInput = props => (
+const MessageInput = ({ onSubmit, ...props }) => (
   <MessageInputContainer>
     <Input
       { ...props }
       type='text'
       onKeyDown={ e => {
         if (e.which === ENTER_KEY) {
-          props.onSubmit()
+          onSubmit()
         }
       }}
     />
