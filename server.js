@@ -11,6 +11,14 @@ io.on('connection', socket => {
   socket.on('message', message => {
     io.emit('message', message)
   })
+
+  socket.on('userDidStartTyping', user => {
+    io.emit('userDidStartTyping', user)
+  })
+
+  socket.on('userDidStopTyping', user => {
+    io.emit('userDidStopTyping', user)
+  })
 })
 
 server.listen(port, err => {
