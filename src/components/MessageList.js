@@ -11,6 +11,7 @@ const MessageList = ({ messages, usersTyping }) => (
       <CSSTransitionGroup
         transitionName='message-list'
         transitionEnterTimeout={ 300 }
+        transitionLeaveTimeout={ 300 }
       >
         { messages.map(message => (
           <MessageListItem
