@@ -4,12 +4,6 @@ const RESET_VALUE = 'RESET_VALUE'
 const USER_STARTED_TYPING = 'USER_STARTED_TYPING'
 const USER_STOPPED_TYPING = 'USER_STOPPED_TYPING'
 
-const initialState = {
-  usersTyping: [],
-  messages: [],
-  value: ''
-}
-
 export const changeValue = value => ({
   type: CHANGE_VALUE,
   value
@@ -72,27 +66,11 @@ const value = (state = '', action) => {
   }
 }
 
-const reducer = (state = initialState, action) => {
-  switch (action.type) {
-    case CHANGE_VALUE:
-    case RESET_VALUE:
-      return {
-        ...state,
-        value: value(state.value, action)
-      }
-    case INCOMING_MESSAGE:
-      return {
-        ...state,
-        messages: messages(state.messages, action)
-      }
-    case USER_STARTED_TYPING:
-    case USER_STOPPED_TYPING:
-      return {
-        ...state,
-        usersTyping: usersTyping(state.usersTyping, action)
-      }
-    default:
-      return state
+const reducer = (state = {}, action) => {
+  return {
+    messages: messages(state.messages, action),
+    usersTyping: usersTyping(state.usersTyping, action),
+    value: value(state.value, action)
   }
 }
 
