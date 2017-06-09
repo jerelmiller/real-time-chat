@@ -25,7 +25,7 @@ class App extends Component {
 
     this.socket.on('message', message => {
       this.setState(state =>
-        reducer(state, incomingMessage(message, message.id === this.id))
+        reducer(state, incomingMessage(message, message.userId === this.id))
       )
     })
 
@@ -73,7 +73,7 @@ class App extends Component {
     }
 
     this.socket.emit('message', {
-      id: this.id,
+      userId: this.id,
       message: value,
       username,
       timestamp
