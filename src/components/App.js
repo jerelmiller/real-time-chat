@@ -1,11 +1,11 @@
 import ChatContainer from './ChatContainer'
-import io from 'socket.io-client'
 import guid from '../utils/guid'
 import React, { Component } from 'react'
 import MessageInput from './MessageInput'
 import MessageList from './MessageList'
 import WelcomeModal from './WelcomeModal'
 import moment from 'moment'
+import { Socket } from 'phoenix'
 import reducer, {
   changeValue,
   incomingMessage,
@@ -21,15 +21,22 @@ class App extends Component {
 
     this.state = reducer(undefined, {})
     this.id = guid()
-    this.socket = io(process.env.REACT_APP_SOCKET_ADDRESS)
+    const socket = new Socket(process.env.REACT_APP_SOCKET_ADDRESS, {
+      params: {},
+      logger: (kind, msg, data) => console.log({ kind, msg, data })
+    })
+    socket.connect()
 
-    this.socket.on('message', message => {
+    this.channel = socket.channel('chat:lobby', {})
+    this.channel.join()
+
+    this.channel.on('message', message => {
       this.setState(state =>
         reducer(state, incomingMessage(message, message.userId === this.id))
       )
     })
 
-    this.socket.on('userEntered', user => {
+    this.channel.on('userEntered', user => {
       if (user.id !== this.id) {
         this.setState(state =>
           reducer(state, incomingMessage({
@@ -43,19 +50,19 @@ class App extends Component {
       }
     })
 
-    this.socket.on('userDidStartTyping', user => {
+    this.channel.on('userDidStartTyping', user => {
       if (user.id !== this.id) {
         this.setState(state => reducer(state, userStartedTyping(user)))
       }
     })
 
-    this.socket.on('userDidStopTyping', user => {
+    this.channel.on('userDidStopTyping', user => {
       if (user.id !== this.id) {
         this.setState(state => reducer(state, userStoppedTyping(user)))
       }
     })
 
-    this.socket.on('userDisconnected', user => {
+    this.channel.on('userDisconnected', user => {
       this.setState(state =>
         reducer(state, incomingMessage({
           userId: user.id,
@@ -70,7 +77,7 @@ class App extends Component {
 
   componentDidMount() {
     window.onbeforeunload = () => {
-      this.socket.emit('userDisconnected', {
+      this.channel.push('userDisconnected', {
         id: this.id,
         username: this.state.username
       })
@@ -82,15 +89,15 @@ class App extends Component {
     const user = { id: this.id, username }
 
     if (Boolean(value) && !prevState.value) {
-      this.socket.emit('userDidStartTyping', user)
+      this.channel.push('userDidStartTyping', user)
     }
 
     if (Boolean(prevState.value) && !value) {
-      this.socket.emit('userDidStopTyping', user)
+      this.channel.push('userDidStopTyping', user)
     }
 
     if (Boolean(username) && !prevState.username) {
-      this.socket.emit('userEntered', {
+      this.channel.push('userEntered', {
         ...user,
         timestamp: moment.utc().toISOString()
       })
@@ -116,7 +123,7 @@ class App extends Component {
       return
     }
 
-    this.socket.emit('message', {
+    this.channel.push('message', {
       userId: this.id,
       type: 'CHAT',
       message: value,
