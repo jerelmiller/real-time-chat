@@ -1,6 +1,5 @@
 import React from 'react'
 import MessageBubble from './MessageBubble'
-import MessageDetails from './MessageDetails'
 import MessageListItemContainer from './MessageListItemContainer'
 import MessageSentInfo from './MessageSentInfo'
 
