@@ -26,12 +26,12 @@ class App extends Component {
   }
 
   componentDidUpdate(_, prevState) {
-    const { typing } = this.state
+    const { value } = this.state
     const user = { id: this.id, name: 'Jerel' }
 
-    if (typing && !prevState.typing) {
+    if (Boolean(value) && !prevState.value) {
       this.socket.emit('userDidStartTyping', user)
-    } else if (prevState.typing && !typing) {
+    } else if (Boolean(prevState.value) && !value) {
       this.socket.emit('userDidStopTyping', user)
     }
   }
