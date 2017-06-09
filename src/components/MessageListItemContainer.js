@@ -20,7 +20,7 @@ export default styled.div`
       opacity: 1;
     }
     &.message-list-leave-active {
-      transition: opacity 0.3s ease-out;
+      transition: opacity ${animationTiming};
       animation: ${leaveAnimation} ${animationTiming};
       opacity: 0;
     `}
