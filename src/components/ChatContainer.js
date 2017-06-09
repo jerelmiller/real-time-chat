@@ -8,6 +8,14 @@ const ChatContainer = styled.div`
   position: relative;
   top: 50%;
   transform: translateY(-50%);
+
+  @media(max-width: 1000px) {
+    width: 70%;
+  }
+
+  @media(max-width: 600px) {
+    width: 85%;
+  }
 `
 
 export default ChatContainer
