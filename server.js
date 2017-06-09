@@ -8,7 +8,9 @@ const server = Server(app)
 const io = socket(server)
 
 io.on('connection', socket => {
-  console.log('connected!')
+  socket.on('message', message => {
+    io.emit('message', message)
+  })
 })
 
 server.listen(port, err => {
