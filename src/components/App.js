@@ -4,11 +4,13 @@ import guid from '../utils/guid'
 import React, { Component } from 'react'
 import MessageInput from './MessageInput'
 import MessageList from './MessageList'
+import WelcomeModal from './WelcomeModal'
 import moment from 'moment'
 import reducer, {
   changeValue,
   incomingMessage,
   resetValue,
+  setUsername,
   userStartedTyping,
   userStoppedTyping
 } from '../reducer'
@@ -41,8 +43,8 @@ class App extends Component {
   }
 
   componentDidUpdate(_, prevState) {
-    const { value } = this.state
-    const user = { id: this.id, name: 'Jerel' }
+    const { username, value } = this.state
+    const user = { id: this.id, username }
 
     if (Boolean(value) && !prevState.value) {
       this.socket.emit('userDidStartTyping', user)
@@ -63,7 +65,7 @@ class App extends Component {
   }
 
   sendMessage() {
-    const { value } = this.state
+    const { username, value } = this.state
     const timestamp = moment.utc().toISOString()
 
     if (!value) {
@@ -73,26 +75,34 @@ class App extends Component {
     this.socket.emit('message', {
       id: this.id,
       message: value,
-      name: 'Jerel',
+      username,
       timestamp
     })
   }
 
   render() {
-    const { messages, usersTyping, value } = this.state
+    const { username, messages, usersTyping, value } = this.state
 
     return (
-      <ChatContainer>
-        <MessageList
-          messages={ messages }
-          usersTyping={ usersTyping }
+      <div style={{ height: '100%' }}>
+        <ChatContainer>
+          <MessageList
+            messages={ messages }
+            usersTyping={ usersTyping }
+          />
+          <MessageInput
+            value={ value }
+            onChange={ this.handleChange }
+            onSubmit={ this.handleSubmit }
+          />
+        </ChatContainer>
+        <WelcomeModal
+          open={ !username }
+          onChooseName={ username =>
+            this.setState(state => reducer(state, setUsername(username)))
+          }
         />
-        <MessageInput
-          value={ value }
-          onChange={ this.handleChange }
-          onSubmit={ this.handleSubmit }
-        />
-      </ChatContainer>
+      </div>
     )
   }
 }

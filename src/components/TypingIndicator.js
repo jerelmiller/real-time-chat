@@ -5,7 +5,7 @@ import MessageListItemContainer from './MessageListItemContainer'
 import TypingCircles from './TypingCircles'
 import { scaleIn, scaleOut } from '../animations'
 
-const TypingIndicator = ({ name }) => (
+const TypingIndicator = ({ username }) => (
   <MessageListItemContainer
     enterAnimation={ scaleIn }
     leaveAnimation={ scaleOut }
@@ -13,7 +13,7 @@ const TypingIndicator = ({ name }) => (
     <MessageBubble>
       <TypingCircles />
     </MessageBubble>
-    <MessageInfo>{ name } is typing...</MessageInfo>
+    <MessageInfo>{ username } is typing...</MessageInfo>
   </MessageListItemContainer>
 )
 

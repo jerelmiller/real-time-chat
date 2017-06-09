@@ -20,7 +20,7 @@ const MessageList = ({ messages, usersTyping }) => (
           />
         )) }
         { usersTyping.map(user => (
-          <TypingIndicator key={ user.id } name={ user.name } />
+          <TypingIndicator key={ user.id } username={ user.username } />
         ))}
       </CSSTransitionGroup>
     </MessageListContainer>

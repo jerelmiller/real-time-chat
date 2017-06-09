@@ -1,6 +1,7 @@
 const CHANGE_VALUE = 'CHANGE_VALUE'
 const INCOMING_MESSAGE = 'INCOMING_MESSAGE'
 const RESET_VALUE = 'RESET_VALUE'
+const SET_USERNAME = 'SET_USERNAME'
 const USER_STARTED_TYPING = 'USER_STARTED_TYPING'
 const USER_STOPPED_TYPING = 'USER_STOPPED_TYPING'
 
@@ -17,6 +18,11 @@ export const incomingMessage = (message, mine) => ({
 
 export const resetValue = () => ({
   type: RESET_VALUE
+})
+
+export const setUsername = username => ({
+  type: SET_USERNAME,
+  username
 })
 
 export const userStartedTyping = user => ({
@@ -66,10 +72,20 @@ const value = (state = '', action) => {
   }
 }
 
+const username = (state = '', action) => {
+  switch (action.type) {
+    case SET_USERNAME:
+      return action.username
+    default:
+      return state
+  }
+}
+
 const reducer = (state = {}, action) => {
   return {
     messages: messages(state.messages, action),
     usersTyping: usersTyping(state.usersTyping, action),
+    username: username(state.username, action),
     value: value(state.value, action)
   }
 }

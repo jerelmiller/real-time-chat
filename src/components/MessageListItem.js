@@ -7,7 +7,14 @@ import { slideInFromLeft, slideInFromRight } from '../animations'
 
 const DATE_FORMAT = 'MMM Do, h:mma'
 
-const MessageListItem = ({ message: { mine, message, name, timestamp }}) => (
+const MessageListItem = ({
+  message: {
+    mine,
+    message,
+    username,
+    timestamp
+  }}
+) => (
   <MessageListItemContainer
     align={ mine ? 'right' : 'left' }
     enterAnimation={ mine ? slideInFromRight : slideInFromLeft }
@@ -16,7 +23,7 @@ const MessageListItem = ({ message: { mine, message, name, timestamp }}) => (
       { message }
     </MessageBubble>
     <MessageInfo>
-      { `${moment(timestamp).format(DATE_FORMAT)} from ${name}` }
+      { `${moment(timestamp).format(DATE_FORMAT)} from ${username}` }
     </MessageInfo>
   </MessageListItemContainer>
 )
