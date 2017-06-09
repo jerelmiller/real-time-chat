@@ -5,18 +5,13 @@ import React, { Component } from 'react'
 import MessageInput from './MessageInput'
 import MessageList from './MessageList'
 import moment from 'moment'
+import reducer from '../reducer'
 
 class App extends Component {
-  state = {
-    typing: false,
-    usersTyping: [],
-    messages: [],
-    message: ''
-  }
-
   constructor(props) {
     super(props)
 
+    this.state = reducer(undefined, {})
     this.id = guid()
     this.socket = io(process.env.REACT_APP_SOCKET_ADDRESS)
     this.socket.on('message', this.handleIncomingMessage)
@@ -40,12 +35,12 @@ class App extends Component {
       return
     }
 
-    this.setState(state => ({
-      usersTyping: [
-        ...state.usersTyping,
-        user
-      ]
-    }))
+    this.setState(state =>
+      reducer(state, {
+        type: 'USER_STARTED_TYPING',
+        user: user
+      })
+    )
   }
 
   handleStopTyping = user => {
@@ -53,48 +48,41 @@ class App extends Component {
       return
     }
 
-    this.setState(state => ({
-      usersTyping: state.usersTyping.filter(u => u.id !== user.id)
-    }))
+    this.setState(state =>
+      reducer(state, {
+        type: 'USER_STOPPED_TYPING',
+        user
+      })
+    )
   }
 
   handleIncomingMessage = message => {
-    this.setState(state => ({
-      messages: [
-        ...state.messages,
-        { ...message, mine: message.id === this.id }
-      ]
-    }))
+    this.setState(state =>
+      reducer(state, {
+        type: 'ADD_MESSAGE',
+        mine: message.id === this.id,
+        message
+      })
+    )
   }
 
   handleChange = e => {
     const { value } = e.target
 
-    this.setState({
-      message: value,
-      typing: Boolean(value)
-    })
+    this.setState(state => (
+      reducer(state, {
+        type: 'CHANGE_MESSAGE',
+        value
+      })
+    ))
   }
 
   handleSubmit = () => {
     this.sendMessage()
-    this.setState({ message: '', typing: false })
+    this.setState(state => reducer(state, { type: 'RESET_MESSAGE' }))
   }
 
   sendMessage() {
-    const { message } = this.state
-    const timestamp = moment.utc().toISOString()
-
-    if (!message) {
-      return
-    }
-
-    this.socket.emit('message', {
-      id: this.id,
-      message,
-      timestamp,
-      name: 'Jerel'
-    })
   }
 
   render() {
